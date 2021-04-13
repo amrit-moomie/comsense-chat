@@ -1,0 +1,11 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureSignalRConnectionString": "Endpoint=https://comsensechat.service.signalr.net;AccessKey=zngB6PfErli7/S7Pi5n4xyzkpnEUwPwUZVfnjwaFw7Q=;Version=1.0;"
+  },
+  "Host": {
+    "LocalHttpPort": 7072,
+    "CORS": "*",
+    "CORSCredentials": false
+  }
+}
