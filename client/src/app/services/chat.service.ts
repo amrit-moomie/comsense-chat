@@ -10,11 +10,12 @@ import { Message } from '../models/message';
 export class ChatService {  
   messageReceived = new EventEmitter<Message>();  
   connectionEstablished = new EventEmitter<Boolean>();  
-  
+
   private connectionIsEstablished = false;  
   private _hubConnection: HubConnection;  
   
-  constructor(private httpClient: HttpClient) {  
+  constructor(private httpClient: HttpClient) { 
+    console.log('here')
     this.createConnection();  
   }  
   

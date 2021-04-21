@@ -1,4 +1,4 @@
-export default [
+export const Users: User[] =  [
     {
         "email": "amrit.moomie@comsenseinc.com",
         "name": "Amrit",
@@ -31,3 +31,10 @@ export default [
     },
 
 ];
+
+export interface User {
+    email: string;
+    name: string;
+    password: string;
+    userId: number;
+}
