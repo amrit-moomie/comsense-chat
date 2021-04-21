@@ -25,7 +25,7 @@ export class AppComponent {
       this.message = new Message();
       this.message.clientuniqueid = this.uniqueID;
       this.message.type = "sent";
-      this.message.message = this.txtMessage;
+      this.message.text = this.txtMessage;
       this.message.date = new Date();
       this.messages.push(this.message);
       this.chatService.sendMessage(this.message);
@@ -34,6 +34,7 @@ export class AppComponent {
   }
 
   handleChange(messageValue: any): void {
+    console.log({messageValue});
     this.txtMessage = messageValue;
   }
   private subscribeToEvents(): void {

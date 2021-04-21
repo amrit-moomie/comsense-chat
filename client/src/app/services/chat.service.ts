@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
 import { HubConnection, HubConnectionBuilder, IHttpConnectionOptions, LogLevel } from '@microsoft/signalr';
 import { tap } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 import { Message } from '../models/message';
 
   
@@ -18,17 +19,22 @@ export class ChatService {
   }  
   
   sendMessage(message: Message) {  
-    this._hubConnection.invoke('NewMessage', message);  
-  }  
+    this.httpClient.post(this.talkUrl, message).subscribe()
+  } 
+
+  get talkUrl() {
+  return environment.hubUrl + 'talk';
+  }
   
+  get negotiateUrl() {
+    return environment.hubUrl + 'negotiate';
+    }
   private createConnection() {  
     const headers = new HttpHeaders()
     .append('x-functions-key', `wBwLfcFRDMI+vQtoyhmvKEBsaheX7ssA+nuT32v+IUc=`)
     // .append('x-ms-signalr-userid', signalR_user_id);
     
-  
-    console.log('here');
-    this.httpClient.get(`http://10.0.0.186:7071/api/negotiate`,{ headers }).pipe(tap(async (x: any) => {
+    this.httpClient.get(this.negotiateUrl,{ headers }).pipe(tap(async (x: any) => {
       console.log('NotificationHubClient', `Negotiation results: ${JSON.stringify(x)}`);
       const options: IHttpConnectionOptions = {
         // logger: logger,
@@ -39,6 +45,7 @@ export class ChatService {
       this._hubConnection = this._hubConnection || new HubConnectionBuilder()
       .withUrl(x.url, options)
       .configureLogging(LogLevel.Trace)
+      .withAutomaticReconnect()
       .build();    
 
       this.registerOnServerEvents();  
@@ -62,7 +69,8 @@ export class ChatService {
   }  
   
   private registerOnServerEvents(): void {  
-    this._hubConnection.on('MessageReceived', (data: any) => {  
+    this._hubConnection.on('newMessage', (data: any) => {  
+      console.log({data});
       this.messageReceived.emit(data);  
     });  
   }  

@@ -203,7 +203,7 @@
     position: absolute;
     right: 0;
     top: 11px;
-    width: 33px;
+    width: auto;
   }
   
   .messaging {
