@@ -1,7 +1,8 @@
 export class Message {
-    clientuniqueid: string
+    clientUniqueId: string
     type: string;
     text: string;
     date: Date;
-    name:string = "amrit";
+    owner:string;
+    guid: string;
   }

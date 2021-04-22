@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
 import { HubConnection, HubConnectionBuilder, IHttpConnectionOptions, LogLevel } from '@microsoft/signalr';
 import { tap } from 'rxjs/operators';
@@ -11,7 +11,7 @@ export class ChatService {
   messageReceived = new EventEmitter<Message>();  
   connectionEstablished = new EventEmitter<Boolean>();  
 
-  private connectionIsEstablished = false;  
+  public connectionIsEstablished = false;  
   private _hubConnection: HubConnection;  
   
   constructor(private httpClient: HttpClient) { 
@@ -31,30 +31,28 @@ export class ChatService {
     return environment.hubUrl + 'negotiate';
     }
   private createConnection() {  
-    const headers = new HttpHeaders()
-    .append('x-functions-key', `wBwLfcFRDMI+vQtoyhmvKEBsaheX7ssA+nuT32v+IUc=`)
-    // .append('x-ms-signalr-userid', signalR_user_id);
-    
-    this.httpClient.get(this.negotiateUrl,{ headers }).pipe(tap(async (x: any) => {
-      console.log('NotificationHubClient', `Negotiation results: ${JSON.stringify(x)}`);
-      const options: IHttpConnectionOptions = {
-        // logger: logger,
-        accessTokenFactory: () => x.accessToken,
-        logMessageContent: true
-        //,
-      };
-      this._hubConnection = this._hubConnection || new HubConnectionBuilder()
-      .withUrl(x.url, options)
-      .configureLogging(LogLevel.Trace)
-      .withAutomaticReconnect()
-      .build();    
-
-      this.registerOnServerEvents();  
-      this.startConnection();  
+    this.httpClient.get(this.negotiateUrl).pipe(tap(async (x: any) => {
+      this.handleNegotiate(x);
     })).subscribe();
 
   }
-  
+  async handleNegotiate(response: any) {
+    console.log('NotificationHubClient', `Negotiation results: ${JSON.stringify(response)}`);
+    const options: IHttpConnectionOptions = {
+      // logger: logger,
+      accessTokenFactory: () => response.accessToken,
+      logMessageContent: true
+      //,
+    };
+    this._hubConnection = this._hubConnection || new HubConnectionBuilder()
+    .withUrl(response.url, options)
+    .configureLogging(LogLevel.Trace)
+    .withAutomaticReconnect()
+    .build();    
+    this.registerOnServerEvents();  
+    this.startConnection(); 
+  }
+
   private startConnection(): void {  
     this._hubConnection  
       .start()  

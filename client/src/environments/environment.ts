@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  "hubUrl": "http://10.0.0.186:7071/api/",
+  //"hubUrl": "http://10.0.0.186:7071/api/",
+  "hubUrl": "https://comsensechat.azurewebsites.net/api/"
 };
 
 /*

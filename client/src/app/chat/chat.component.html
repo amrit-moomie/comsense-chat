@@ -1,10 +1,14 @@
-
-<div class="container">
-    <h3 class=" text-center chat_header">Chat Application</h3>
+<mat-card class="chat-card">
+  <mat-card-header>
+    <div mat-card-avatar class="example-header-image"></div>
+    <mat-card-title>Comsense Chat App</mat-card-title>
+    <mat-card-subtitle>Development Group</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
     <div class="messaging">
       <div class="inbox_msg">
         <div class="mesgs">
-          <div class="msg_history">
+          <div #scrollMe class="msg_history">
             <div *ngFor="let msg of messages">
             <div class="incoming_msg" *ngIf="msg.type == 'received'">
               <div class="incoming_msg_img"> </div>
@@ -13,6 +17,7 @@
                   <p>
                    {{msg.text}} 
                   </p>
+                  <span>{{msg.owner}}</span>
                   <span class="time_date"> {{msg.date | date:'medium'}} </span>
                 </div>
               </div>
@@ -32,11 +37,17 @@
               <input type="text" class="write_msg" 
               [(ngModel)]="txtMessage"
               (keydown.enter)="sendMessage()" placeholder="Type a message" />
-              <button class="msg_send_btn" type="button"  (click)="sendMessage()">Send<i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+              <button class="msg_send_btn" mat-icon-button (click)="sendMessage()">
+                <mat-icon>send</mat-icon>
+              </button>
             </div>
           </div>
         </div>
       </div>
   
     </div>
-  </div>
+  </mat-card-content>
+  <mat-card-footer *ngIf="!chatService.connectionIsEstablished">
+    <mat-error>>>>>> waiting to connect to server....</mat-error>
+  </mat-card-footer>
+  </mat-card>
